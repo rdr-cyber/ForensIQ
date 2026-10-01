@@ -31,15 +31,23 @@ powershell -NoProfile -Command "Get-CimInstance Win32_Process -Filter \"Name='cl
 ping -n 2 127.0.0.1 >nul
 
 if exist "%LOG%" del "%LOG%" >nul 2>&1
-start "Jocky quick tunnel" /min cmd /c "cloudflared tunnel --url http://localhost:3000 > %LOG% 2>&1"
+rem Start-Process detaches cleanly: a plain `start cmd /c` wrapper
+rem inherits the caller's redirected stdout and can hold it open forever
+set "ERRLOG=%TEMP%\jocky-tunnel-err.log"
+powershell -NoProfile -Command "Start-Process cloudflared -ArgumentList 'tunnel','--url','http://localhost:3000' -WindowStyle Hidden -RedirectStandardOutput '%LOG%' -RedirectStandardError '%ERRLOG%'"
 echo Tunnel starting, waiting for the URL...
 rem ping-based sleep: `timeout /nobreak` hangs when stdin is redirected
 ping -n 13 127.0.0.1 >nul
 
+rem findstr can block forever on a log that cloudflared keeps open -
+rem parse a closed COPY of it instead
+set "SNAP=%TEMP%\jocky-tunnel-snapshot.log"
+copy /y "%LOG%" "%SNAP%" >nul 2>&1
 set "RAW="
-for /f "tokens=*" %%U in ('findstr /r "trycloudflare\.com" "%LOG%"') do set "RAW=%%U"
+for /f "tokens=*" %%U in ('findstr /r "trycloudflare\.com" "%SNAP%"') do set "RAW=%%U"
 if not defined RAW (
-  echo Tunnel did not come up - see log: %LOG%
+  echo Tunnel did not come up - last log lines:
+  powershell -NoProfile -Command "Get-Content '%LOG%' -Tail 5" 2>nul
   exit /b 1
 )
 rem strip the log prefix and box-drawing pipes from the URL line
