@@ -1,0 +1,7 @@
+# ForensiQ demo: hash a target file, log progress, emit evidence bundle.
+# Every statement below is recorded in the audit log.
+
+acquire file "C:/target.txt"
+hash sha256
+log "hash computed"
+report "hash_sweep_report.json"

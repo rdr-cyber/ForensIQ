@@ -1,0 +1,6 @@
+# ForensiQ runtime dependencies
+cryptography>=41.0  # Ed25519 signing of evidence bundles
+
+# Future milestones (do not install yet):
+#   pyspellchecker  # fuzzy keyword recovery for damaged scripts
+#   watchdog        # live directory monitoring for `acquire watch`

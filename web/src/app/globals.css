@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+
+  /* token mirrors (consumable in plain CSS/SVG where Tailwind classes won't reach) */
+  --bg-page: #070b12;
+  --surface: #0b1120;
+  --surface-card: #111a2e;
+  --line: #1e293b;
+  --signal: #34d399;
+  --danger: #f87171;
+  --accent: #22d3ee;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+}
+
+body {
+  @apply bg-navy-950 font-sans text-slate-200 antialiased;
+}
+
+/* visible keyboard focus everywhere */
+:focus-visible {
+  @apply outline-none ring-2 ring-accent/70 ring-offset-2 ring-offset-navy-950;
+}
+
+::selection {
+  background: rgba(34, 211, 238, 0.25);
+}
+
+/* thin scrollbars for log/scroll panes */
+.log-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.log-scroll::-webkit-scrollbar-thumb {
+  @apply rounded bg-line-strong;
+}
+.log-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* loading skeleton shimmer (used by <Skeleton/>) */
+.skeleton-shimmer {
+  background: linear-gradient(
+    100deg,
+    rgba(30, 41, 59, 0.55) 40%,
+    rgba(51, 65, 85, 0.75) 50%,
+    rgba(30, 41, 59, 0.55) 60%
+  );
+  background-size: 200% 100%;
+  @apply animate-shimmer rounded;
+}
+
+/* respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

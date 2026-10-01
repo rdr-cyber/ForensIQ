@@ -1,0 +1,21 @@
+# ForensiQ local artifacts
+.forensiq/
+.freebuff/
+.venv/
+audit.jsonl
+*_report.json
+target.txt
+__pycache__/
+*.pyc
+*.log
+*.zip
+*.tsbuildinfo
+
+# Web app
+web/.env.local
+web/.next/
+web/node_modules/
+web/next-dev.log
+service/uvicorn.log
+service/.forensiq/
+supabase/.temp/
